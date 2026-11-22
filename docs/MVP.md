@@ -160,7 +160,7 @@ START ──pick puzzle──▶ PLAY (card 1..8) ──▶ [AGE PIN if DURING] 
 - **Content:**
   - the date as month and year;
   - for real During cards, the real age (e.g. "Van Gogh was 36");
-  - if the player pinned an age, their guess and the pin result (🎯 within 1 year, 🟡 within 3 years, ⚪ missed);
+  - if the player pinned an age, their guess and the pin result (🎯 within 10% of the lifespan, 🟡 within 20%, ⚪ missed);
   - a one-line fact.
 - **Bar marker:** a marker drops onto the life bar at the event's real date.
 - **Timeout:** the card shows "⏱ Time's up" and plays the reveal as normal.
@@ -209,7 +209,7 @@ Pins 🎯⚪⚪🎯
 ```
 
 - **Squares row:** 🟩 for the right zone and 🟥 for the wrong zone, in dealing order.
-- **Pins row:** one symbol per real During card, in dealing order: 🎯 within 1 year, 🟡 within 3 years, ⚪ missed (including a wrong zone or a timeout).
+- **Pins row:** one symbol per real During card, in dealing order: 🎯 within 10% of the lifespan, 🟡 within 20%, ⚪ missed (including a wrong zone or a timeout).
 
 ## Rules
 
@@ -228,7 +228,7 @@ Pins 🎯⚪⚪🎯
 
 **Age pins: 20 points**
 - The 20 points are split evenly across the puzzle's real During cards. All 3 MVP puzzles have 4 During cards, so each pin is worth 5.
-- Within 1 year earns the full amount. Within 3 years earns half (2.5). Anything further earns 0.
+- The tolerance is a share of the lifespan (age at death, or years of the Soviet Union's existence), so it scales with the puzzle: within **10%** earns the full amount, within **20%** earns half (2.5), anything further earns 0. Van Gogh (37 yrs): ≤3.7 full, ≤7.4 half. Einstein (75): ≤7.5 / ≤15. Soviet Union (68): ≤6.8 / ≤13.6. Ages are whole years, so compare against the exact percentage (no rounding).
 - A pin on a card that isn't really During earns nothing.
 - A real During card placed in the wrong zone, or timed out, earns no pin points either.
 
