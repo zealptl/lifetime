@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#14122B">
+  <meta name="color-scheme" content="dark">
+  <title>Lifetime</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=JetBrains+Mono:wght@500&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main id="app">
+
+  <!-- 1. START (dev picker) -->
+  <section id="screen-start" class="screen">
+    <h1 class="logo">★ L I F E T I M E ★</h1>
+    <p class="tagline">sort 8 events into a life</p>
+    <div id="puzzle-list" class="puzzle-list"></div>
+  </section>
+
+  <!-- 2–4. PLAY: place → (age pin) → reveal -->
+  <section id="screen-play" class="screen" data-phase="place" hidden>
+    <header class="play-head">
+      <div class="head-row">
+        <button class="nav-back" id="btn-back" type="button" aria-label="Back to puzzle list">‹</button>
+        <div class="avatar" id="p-avatar" aria-hidden="true"></div>
+        <div class="name" id="p-name"></div>
+        <div class="progress mono" id="p-progress" aria-label="Card number"></div>
+        <div class="timer mono" id="p-timer" role="timer"></div>
+      </div>
+      <div class="blurb" id="p-blurb"></div>
+    </header>
+
+    <div class="stage">
+      <div class="card-wrap" id="card-wrap">
+        <div class="card-inner" id="card-inner">
+          <div class="face front" id="card-front">
+            <p class="card-text" id="card-text"></p>
+            <span class="placed-tag" id="placed-tag" hidden>DURING ✓</span>
+          </div>
+          <div class="face back" id="card-back">
+            <div class="badge-row">
+              <span class="badge" id="rv-badge"></span>
+              <span class="pts mono" id="rv-pts"></span>
+            </div>
+            <div class="rv-date mono" id="rv-date"></div>
+            <div class="rv-age" id="rv-age"></div>
+            <div class="rv-pin" id="rv-pin"></div>
+            <p class="rv-fact" id="rv-fact"></p>
+          </div>
+        </div>
+      </div>
+      <p class="swipe-hint" id="swipe-hint" aria-hidden="true">← swipe &nbsp; ↑ &nbsp; swipe →</p>
+    </div>
+
+    <div class="dock">
+      <!-- place -->
+      <div class="zones" id="zones">
+        <button type="button" class="zone zone-before" data-zone="before"><span class="zone-label">BEFORE</span></button>
+        <button type="button" class="zone zone-during" data-zone="during">
+          <span class="zone-label">DURING</span>
+          <span class="zone-years mono" id="zone-years"></span>
+        </button>
+        <button type="button" class="zone zone-after" data-zone="after"><span class="zone-label">AFTER</span></button>
+      </div>
+
+      <!-- age pin -->
+      <div class="pin" id="pin-panel">
+        <p class="pin-q" id="pin-q"></p>
+        <div class="pin-age mono" id="pin-age"></div>
+        <div class="pin-year mono" id="pin-year"></div>
+        <div class="pin-track">
+          <span class="yr mono" id="pin-y0"></span>
+          <input type="range" id="pin-slider" min="0" max="1" step="1" value="0" aria-label="Age in years">
+          <span class="yr mono" id="pin-y1"></span>
+          <span class="yr mono sub">0</span>
+          <span></span>
+          <span class="yr mono sub" id="pin-max"></span>
+        </div>
+        <button type="button" class="btn primary" id="btn-lock">LOCK IN ➜</button>
+      </div>
+
+      <!-- reveal -->
+      <div class="reveal-dock" id="reveal-dock">
+        <div id="rv-bar"></div>
+        <p class="tap-continue">tap to continue ➜</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. RESULTS -->
+  <section id="screen-results" class="screen" hidden>
+    <p class="res-title" id="res-title"></p>
+    <div class="res-score"><span class="mono" id="res-score">0</span><small>/ 100</small></div>
+    <p class="res-rank" id="res-rank"></p>
+    <p class="res-break mono" id="res-break"></p>
+
+    <div class="recap" id="recap"></div>
+    <p class="recap-detail" id="recap-detail">Tap a dot to see the card. Coral ring = your miss.</p>
+
+    <pre class="share-preview" id="share-preview"></pre>
+
+    <div class="res-actions">
+      <div class="row">
+        <button type="button" class="btn primary" id="btn-share">SHARE 📋</button>
+        <a class="btn ghost" id="btn-wiki" href="#" target="_blank" rel="noopener noreferrer">Wikipedia ↗</a>
+      </div>
+      <button type="button" class="btn ghost wide" id="btn-again">play another ➜</button>
+    </div>
+  </section>
+
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="puzzles.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
