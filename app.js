@@ -9,6 +9,8 @@ const PUZZLES = window.PUZZLES;
 const ZONE_SECONDS = 15;
 const PIN_SECONDS = 10;
 const WARN_SECONDS = 5;
+const PIN_FULL_PCT = 0.10;   // pin within 10% of the lifespan → full points
+const PIN_HALF_PCT = 0.20;   // pin within 20% of the lifespan → half points
 const SORT_POINTS = 10;      // per correctly placed card
 const PIN_TOTAL = 20;        // split across the puzzle's real During cards
 const SWIPE_COMMIT = 80;     // px
@@ -64,8 +66,10 @@ function assertPuzzles() {
 
 /* ═══════════════════════ Scoring ═══════════════════════ */
 
-function pinGrade(diff) {
-  return diff <= 1 ? 'exact' : diff <= 3 ? 'near' : 'miss';
+/** Tolerance scales with the lifespan (e.g. Van Gogh, 37 yrs: ≤3.7 full, ≤7.4 half). */
+function pinGrade(p, diff) {
+  const span = maxAge(p);
+  return diff <= span * PIN_FULL_PCT ? 'exact' : diff <= span * PIN_HALF_PCT ? 'near' : 'miss';
 }
 const PIN_SYMBOL = { exact: '🎯', near: '🟡', miss: '⚪' };
 
@@ -81,7 +85,7 @@ function scoreCard(p, card, ans) {
     out.age = ageOn(p.start, card.date);
     if (right && ans.pin != null) {
       out.diff = Math.abs(ans.pin - out.age);
-      out.grade = pinGrade(out.diff);
+      out.grade = pinGrade(p, out.diff);
       out.pinPts = out.grade === 'exact' ? pinWorth(p) : out.grade === 'near' ? pinWorth(p) / 2 : 0;
     }
   }
@@ -704,12 +708,18 @@ function runSelfTest() {
   check('pin timeout scores 0 for the pin', ptc.pinPts, 0);
 
   // pin bands & rounding
-  const near = perfect(vg); near[0].pin += 3;
-  check('within 3 years earns half (80+15+2.5 → 98)', scorePuzzle(vg, near).total, 98);
-  const far = perfect(vg); far[0].pin += 4;
-  check('4 years off earns 0 (95)', scorePuzzle(vg, far).total, 95);
-  const one = perfect(vg); one[0].pin += 1;
-  check('1 year off earns full (100)', scorePuzzle(vg, one).total, 100);
+  // Van Gogh lifespan 37 → full ≤3.7 (3 yrs), half ≤7.4 (7 yrs)
+  const full = perfect(vg); full[0].pin += 3;
+  check('3 years off (≤10% of 37) earns full (100)', scorePuzzle(vg, full).total, 100);
+  const half = perfect(vg); half[0].pin += 4;
+  check('4 years off earns half (80+15+2.5 → 98)', scorePuzzle(vg, half).total, 98);
+  const half7 = perfect(vg); half7[0].pin += 7;
+  check('7 years off still earns half (98)', scorePuzzle(vg, half7).total, 98);
+  const far = perfect(vg); far[0].pin += 8;
+  check('8 years off earns 0 (95)', scorePuzzle(vg, far).total, 95);
+  // Einstein lifespan 75 → full ≤7.5, half ≤15: tolerance scales with the life
+  const ein = byId(2), e1 = perfect(ein); e1[1].pin += 7;
+  check('Einstein: 7 years off earns full (100)', scorePuzzle(ein, e1).total, 100);
 
   // ranks
   for (const [score, rank] of [[100, 'Time traveller'], [95, 'Time traveller'], [94, 'Biographer'], [80, 'Biographer'], [79, 'Old friend'], [60, 'Old friend'], [59, 'Acquaintance'], [40, 'Acquaintance'], [39, 'Stranger'], [0, 'Stranger']]) {
